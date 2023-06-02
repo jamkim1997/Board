@@ -31,17 +31,24 @@
 </nav>
 <div class="container">
     <h2 >Board</h2>
-    <form action="">
+    <form action="#" th:action="@{/board/form}" th:object="${board}" method="post">
+        <input type="hidden" th:field="*{id}">
         <div class="form-group">
             <label for="title">Name</label>
-            <input class="form-control" id="title">
+            <input class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"  id="title" type="text" th:field="*{title}">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                Please provide a valid title
+            </div>
         </div>
         <div class="form-group">
             <label for="content">Content</label>
-            <textarea class="form-control" id="content" rows="3"></textarea>
+            <textarea class="form-control" id="content" rows="3" th:field="*{content}"></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                Please provide a valid content
+            </div>
         </div>
         <div class="text-right">
-            <a type="button" class="btn btn-primary" th:href="@{/board/list}">Cancel</a>
+            <a type="button" class="btn btn-danger" th:href="@{/board/list}">Cancel</a>
             <button type="submit" class="btn btn-primary">Write</button>
         </div>
     </form>
