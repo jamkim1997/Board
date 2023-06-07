@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,11 +55,12 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String boardSubmit(@Valid Board board, BindingResult bindingResult) {
+    public String boardSubmit(@Valid Board board, BindingResult bindingResult, Authentication authentication) {
         if(bindingResult.hasErrors()) {
             return "board/form";
         }
-        boardService.saveBoard(board);
+        String name = authentication.getName();
+        boardService.saveBoard(name, board);
         return "redirect:/board/list";
     }
 }
