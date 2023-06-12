@@ -33,24 +33,16 @@
     <h2 >Board</h2>
     <form action="#" th:action="@{/board/form}" th:object="${board}" method="post">
         <input type="hidden" th:field="*{id}">
-        <div class="form-group">
-            <label for="title">Name</label>
-            <input class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"  id="title" type="text" th:field="*{title}">
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
-                Please provide a valid title
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="content">Content</label>
-            <textarea class="form-control" id="content" rows="3" th:field="*{content}"></textarea>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
-                Please provide a valid content
-            </div>
-        </div>
+        <label for="title">Title</label>
+        <p id="title" th:text="*{title}"></p>
+
+        <label for="content">Content</label>
+        <p id="content" th:text="*{content}"></p>
+
         <div class="text-right">
             <a class="btn btn-secondary" th:href="@{/board/list}">Back</a>
             <button type="button" class="btn btn-warning" sec:authorize="hasRole('ROLE_ADMIN')" th:onclick="|deleteBoard('*{id}')|">Delete</button>
-            <button type="submit" class="btn btn-primary">Write</button>
+            <button type="submit" class="btn btn-primary" th:if="${#authentication.getPrincipal().getUsername() == board.getUser().username}">Write</button>
         </div>
     </form>
 </div>

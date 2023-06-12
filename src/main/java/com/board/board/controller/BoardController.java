@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 2) Pageable pageable,
+    public String list(Model model, @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "") String searchText) {
         //Page<Board> boards = boardService.findAllBoards(pageable);
         Page<Board> boards = boardService.search(searchText, searchText, pageable);
@@ -41,6 +42,17 @@ public class BoardController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("boards", boards);
         return "/board/list";
+    }
+
+    @GetMapping("/board")
+    public String viewBoard(Model model, @RequestParam(required = false) Long id) {
+        if(id == null) {
+            model.addAttribute("board", new Board());
+        }
+        else {
+            model.addAttribute("board", boardService.findBoardById(id).orElse(null));
+        }
+        return "/board/board";
     }
 
     @GetMapping("/form")
