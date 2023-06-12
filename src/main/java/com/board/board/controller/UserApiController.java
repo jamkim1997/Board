@@ -18,8 +18,15 @@ public class UserApiController {
     }
 
     @GetMapping("/users")
-    List<User> all() {
-       return userRepository.findAll();
+    List<User> all(@RequestParam(required = false) String method, @RequestParam(required = false) String text) {
+        if(method.equals("query")) {
+            return userRepository.findByUsernameQuery(text);
+        }
+       else if(method.equals("nativeQuery")) {
+            return userRepository.findByUsernameNativeQuery(text);
+        }else {
+            return userRepository.findAll();
+        }
     }
 
     @PostMapping("/users")
